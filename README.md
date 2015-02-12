@@ -1,11 +1,11 @@
 
-# media-bundler
+# media-packager
 
-  Bundles media!
+  Packages media!
 
 ## API
 
-TBD
+  TBD
 
 ## License
 
