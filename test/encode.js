@@ -4,6 +4,7 @@ var encode = require('../lib/encode')
 var clone = require('clone')
 var count = require('stream-count')
 var hashStream = require('hash-stream')
+var debug = require('debug')('media-packager:test:encode')
 
 var settings = {
   format: 'mp3',
@@ -21,15 +22,17 @@ var settings = {
 
 function testFormat (fmt) {
   test('conversion to ' + fmt + ' works', function (t) {
-    t.plan(2)
-
+    t.plan(1)
     var opts = clone(settings)
     opts.format = fmt
     var stream = encode(opts)
 
+    stream.on('error', function (err) {
+      t.error(err, 'stream error encode')
+    })
+
     hashStream(stream, 'md5', function (err, hash) {
-      t.ok(err)
-      t.equal(hash, "hey")
+      t.error(err)
     })
   })
 }
