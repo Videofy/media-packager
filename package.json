@@ -15,14 +15,14 @@
     "concat-map": "0.0.1",
     "debug": "^2.1.1",
     "dezalgo": "^1.0.1",
-    "fluent-ffmpeg": "^2.0.0-rc3",
     "mkdirp": "^0.5.0",
-    "through2": "^0.6.3"
+    "through2": "^0.6.3",
+    "tmp": "0.0.24"
   },
   "devDependencies": {
-    "bluebird": "^2.9.9",
     "clone": "^1.0.0",
-    "hash-stream": "^1.1.0",
+    "musicmetadata": "^0.6.6",
+    "rimraf": "^2.2.8",
     "stream-count": "0.0.1",
     "tape": "^3.5.0"
   }
