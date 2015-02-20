@@ -7,6 +7,7 @@ var mm = require('musicmetadata')
 var debug = require('debug')('media-packager:test:tagging')
 var rimraf = require('rimraf').sync
 
+var src = join(__dirname, 'fixtures/hellberg.mp3')
 var metadata = {
   artwork: join(__dirname, 'fixtures/art.png'),
   title: 'what',
@@ -23,10 +24,13 @@ function testTagging (fmt) {
 
     debug('got here')
 
-    var stream = fs.createReadStream(src)
-                 .pipe(tagger(metadata))
-
+    var readStream = fs.createReadStream(src)
+    var stream = tagger(readStream, fmt, metadata)
     var parser = mm(stream)
+
+    stream.on('error', function (err) {
+      t.error(err)
+    })
 
     parser.on('error', function (err) {
       t.error(err)
@@ -38,10 +42,6 @@ function testTagging (fmt) {
       t.equal(meta.track.no, metadata.track)
       t.equal(meta.genre, ["Electronic"])
       t.equal(meta.picture.format, 'png')
-
-      // compare hash of picture
-      // t.equal(meta.picture.data, 'png')
-      t.equal(meta.artist, metadata.artist)
     })
   })
 }
