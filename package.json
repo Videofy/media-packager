@@ -9,7 +9,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "node test/*.js"
+    "test": "node test/integration.js"
   },
   "dependencies": {
     "concat-map": "0.0.1",
