@@ -3,7 +3,7 @@ var join = require('path').join
 var fs = require('fs')
 var encode = require('../lib/encode')
 var clone = require('clone')
-var debug = require('debug')('media-packager:test:encode')
+var debug = require('debug')('media-packager:test:encoder')
 var rimraf = require('rimraf').sync
 var through = require('through2')
 
