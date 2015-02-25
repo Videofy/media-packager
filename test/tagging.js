@@ -6,6 +6,7 @@ var tagger = require('../lib/tagger')
 var mm = require('musicmetadata')
 var debug = require('debug')('media-packager:test:tagging')
 var rimraf = require('rimraf').sync
+var count = require('stream-count')
 
 var metadata = {
   artwork: path.join(__dirname, 'fixtures/art.png'),
@@ -25,7 +26,9 @@ function testTagging (src, settings) {
   test(fmt + ' tagging works', function (t) {
     t.plan(9)
 
-    stream.pipe(fs.createWriteStream(path.join(__dirname, 'fixtures/var/hellberg_out.' + fmt)))
+    var out = fs.createWriteStream(path.join(__dirname, 'fixtures/var/hellberg_out.' + fmt))
+    stream.pipe(out)
+
     var parser = mm(stream)
 
     stream.on('error', function (err) {
@@ -56,7 +59,7 @@ function testTagging (src, settings) {
       t.deepEqual(meta.artist, [metadata.artist], 'artist should match')
       t.equal(meta.title, metadata.title, 'title should match')
       t.equal(meta.track.no, metadata.track, 'track number should match')
-      t.deepEqual(meta.genre, ['Electronic'], 'genre should match')
+      t.deepEqual(meta.genre, ['Electronic/Electronic'], 'genre should match')
       t.equal(picture && picture.format, 'png', 'picture should be the right format')
     })
   })
@@ -64,14 +67,12 @@ function testTagging (src, settings) {
   return stream
 }
 
-if (!module.parent) {
-  var src = path.join(__dirname, 'fixtures/hellberg.mp3')
+var src = path.join(__dirname, 'fixtures/hellberg.mp3')
 
-  testTagging(fs.createReadStream(src), {
-    format: 'mp3',
-    metadata: metadata
-  })
-}
+testTagging(fs.createReadStream(src), {
+  format: 'mp3',
+  metadata: metadata
+})
 
 
 module.exports = testTagging

@@ -6,30 +6,41 @@ var clone = require('clone')
 var debug = require('debug')('media-packager:test:encoder')
 var rimraf = require('rimraf').sync
 var through = require('through2')
+var count = require('stream-count')
+var EventEmitter = require('events').EventEmitter
 
 function testEncoding (src, settings) {
   var stream = encode(src, settings)
+  var events = new EventEmitter()
+
+  count(stream, function (err, len) {
+    events.emit('count', err, len)
+  })
 
   test(settings.format + ' encoding works', function (t) {
-    t.plan(1)
+    t.plan(2)
 
     stream.on('error', function (err){
       t.error(err)
     })
 
-    stream.on('end', function (err){
-      t.ok(true, 'encoded successfully')
+    events.on('count', function (err, len) {
+      t.error(err)
+      t.equal(len, settings.expectedSize, 'should be roughly the right size')
     })
   })
 
   return stream
 }
 
-if (!module.parent) {
-  var src = join(__dirname, 'fixtures/hellberg.wav')
-  var dst = join(__dirname, 'fixtures/var/hellberg_out.flac')
+var src = join(__dirname, 'fixtures/hellberg.wav')
+var dst = join(__dirname, 'fixtures/var/hellberg_out.flac')
 
-  testEncoding(fs.createReadStream(src), { format: 'flac' })
+if (!module.parent) {
+  testEncoding(fs.createReadStream(src), {
+    format: 'flac',
+    expectedSize: 1248305
+  })
   .pipe(fs.createWriteStream(dst))
 }
 
