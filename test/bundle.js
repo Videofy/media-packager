@@ -47,7 +47,6 @@ test('bundling works', function (t) {
     items.push(mp3item(i))
   }
 
-
   mkdirp.sync(fixture('var'))
   var bundler = bundle(items)
 
@@ -57,69 +56,8 @@ test('bundling works', function (t) {
     t.equal(counter, frame, 'progress ' + counter + ' found')
   })
 
-  bundler.on('encoded', function (item) {
-    debug('archiver encoded')
-  })
-
-  bundler.on('finish', function () {
-    debug('archiver finish')
-  })
-
-  var entries = []
-  debug('piping?')
-  
-  bundler.on('end', function () {
-    debug('bundler end')
-  })
-
-  bundler.on('finish', function () {
-    debug('bundler finish')
-  })
-
-  bundler.on('finalized', function () {
-    debug('bundler finalized')
-  })
-
-  bundler.on('close', function () {
-    debug('bundler close')
-  })
-
-  bundler.on('data', function (chunk) {
-    if (chunk.length < 30)
-      debug('bundler data', chunk.toString())
-  })
-
   bundler.pipe(fs.createWriteStream(fixture('var/out.zip')))
   count(bundler, function (err, len) {
-    t.equal(len, 4520594, 'file size matches')
+    t.equal(len, 4433407, 'file size matches')
   })
-
-  
-
-// NOTE (jb55): this shit is breaking the stream somehow?
-//bundler.pipe(unzip.Parse())
-//  .on('entry', function (entry) {
-//    debug('unzip entry %s', entry.props.path)
-//    entries.push(entry)
-//  })
-//  .on('end', function () {
-//    debug('unzip end')
-//  })
-//  .on('finish', function () {
-//    debug('unzip finish')
-//  })
-//  .on('pipe', function () {
-//    debug('unzip pipe')
-//  })
-//  .on('error', function (err) {
-//    debug('unzip error', err)
-//  })
-//  .on('drain', function () {
-//    debug('unzip drain')
-//  })
-//  .on('close', function () {
-//    debug('unzip close')
-//    t.equal(entries.length, n, 'zip has ' + n + ' entries')
-//  })
-
 })

@@ -26,7 +26,8 @@ function testEncoding (src, settings) {
 
     events.on('count', function (err, len) {
       t.error(err)
-      t.equal(len, settings.expectedSize, 'should be roughly the right size')
+      var msg = settings.bitRate + ' ' + settings.format + ' should be roughly the right size'
+      t.equal(len, settings.expectedSize, msg)
     })
   })
 
@@ -41,7 +42,12 @@ if (!module.parent) {
     format: 'flac',
     expectedSize: 1248305
   })
-  .pipe(fs.createWriteStream(dst))
+
+  testEncoding(fs.createReadStream(src), {
+    format: 'mp3',
+    bitRate: 320,
+    expectedSize: 508910
+  })
 }
 
 module.exports = testEncoding
