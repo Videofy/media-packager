@@ -3,7 +3,6 @@ var test = require('tape')
 var join = require('path').join
 var fs = require('fs')
 var debug = require('debug')('media-packager:test:encoder')
-var unzip = require('unzip2')
 var bundle = require('../')
 var count = require('stream-count')
 
