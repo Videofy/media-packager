@@ -5,6 +5,7 @@ var fs = require('fs')
 var debug = require('debug')('media-packager:test:encoder')
 var bundle = require('../')
 var count = require('stream-count')
+var mkdirp = require('mkdirp')
 
 function fixture (file) {
   return join(__dirname, 'fixtures', file)
@@ -44,6 +45,9 @@ test('bundling works', function (t) {
   for (var i = 1; i < n; ++i) {
     items.push(mp3item(i))
   }
+
+
+  mkdirp.sync(fixture('var'))
   var bundler = bundle(items)
 
   bundler.on('progress', function (frame, frames) {
