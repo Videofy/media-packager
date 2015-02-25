@@ -7,4 +7,4 @@ machine:
 
 dependencies:
   pre:
-    - easy_install eyeD3
+    - sudo easy_install eyeD3
