@@ -1,8 +1,10 @@
 
 machine:
+  environment:
+    DEBUG: media-packager*
   node:
     version: 0.10.26
 
 dependencies:
   pre:
-    - sudo apt-get update; sudo apt-get install eyed3 zip ffmpeg
+    - sudo pip install eyeD3
