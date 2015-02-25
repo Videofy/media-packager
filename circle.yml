@@ -1,0 +1,8 @@
+
+machine:
+  node:
+    version: 0.10.26
+
+dependencies:
+  pre:
+    - sudo apt-get update; sudo apt-get install eyed3 zip ffmpeg
