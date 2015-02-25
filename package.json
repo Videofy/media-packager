@@ -9,18 +9,21 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "node test/integration.js"
+    "test": "node test/*.js"
   },
   "dependencies": {
     "after": "^0.8.1",
-    "archiver": "^0.14.3",
+    "archiver": "^0.13.1",
+    "async": "^0.9.0",
     "concat-map": "0.0.1",
     "debug": "^2.1.1",
     "dezalgo": "^1.0.1",
     "format-text": "0.0.3",
     "mkdirp": "^0.5.0",
+    "once": "^1.3.1",
     "through2": "^0.6.3",
-    "tmp": "0.0.24"
+    "tmp": "0.0.24",
+    "readable-stream": "^1.0.33"
   },
   "devDependencies": {
     "clone": "^1.0.0",

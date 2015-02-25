@@ -3,13 +3,16 @@ var test = require('tape')
 var join = require('path').join
 var fs = require('fs')
 var debug = require('debug')('media-packager:test:encoder')
+var unzip = require('unzip2')
 var bundle = require('../')
+var count = require('stream-count')
 
 function fixture (file) {
   return join(__dirname, 'fixtures', file)
 }
 
 var src = fixture('hellberg.wav')
+var src2 = fixture('Hellberg - Guide Me Home (feat. Charlotte Haining).wav')
 
 function item (fmt, n) {
   return {
@@ -34,19 +37,20 @@ function mp3item (n) {
 }
 
 test('bundling works', function (t) {
-  t.plan(9)
+  t.plan(10)
   
   var counter = 0
   var items = []
-  for (var i = 1; i < 10; ++i) {
+  var n = 10
+  for (var i = 1; i < n; ++i) {
     items.push(mp3item(i))
   }
   var bundler = bundle(items)
 
   bundler.on('progress', function (frame, frames) {
     counter++
+    debug('bundler progress', frame, frames)
     t.equal(counter, frame, 'progress ' + counter + ' found')
-    debug('archiver progress %d/%d', frame, frames)
   })
 
   bundler.on('encoded', function (item) {
@@ -57,5 +61,61 @@ test('bundling works', function (t) {
     debug('archiver finish')
   })
 
-  bundler.pipe(fs.createWriteStream(fixture('var/bundle.zip')))
+  var entries = []
+  debug('piping?')
+  
+  bundler.on('end', function () {
+    debug('bundler end')
+  })
+
+  bundler.on('finish', function () {
+    debug('bundler finish')
+  })
+
+  bundler.on('finalized', function () {
+    debug('bundler finalized')
+  })
+
+  bundler.on('close', function () {
+    debug('bundler close')
+  })
+
+  bundler.on('data', function (chunk) {
+    if (chunk.length < 30)
+      debug('bundler data', chunk.toString())
+  })
+
+  bundler.pipe(fs.createWriteStream(fixture('var/out.zip')))
+  count(bundler, function (err, len) {
+    t.equal(len, 4520594, 'file size matches')
+  })
+
+  
+
+// NOTE (jb55): this shit is breaking the stream somehow?
+//bundler.pipe(unzip.Parse())
+//  .on('entry', function (entry) {
+//    debug('unzip entry %s', entry.props.path)
+//    entries.push(entry)
+//  })
+//  .on('end', function () {
+//    debug('unzip end')
+//  })
+//  .on('finish', function () {
+//    debug('unzip finish')
+//  })
+//  .on('pipe', function () {
+//    debug('unzip pipe')
+//  })
+//  .on('error', function (err) {
+//    debug('unzip error', err)
+//  })
+//  .on('drain', function () {
+//    debug('unzip drain')
+//  })
+//  .on('close', function () {
+//    debug('unzip close')
+//    t.equal(entries.length, n, 'zip has ' + n + ' entries')
+//  })
+
 })

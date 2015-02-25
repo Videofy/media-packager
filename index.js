@@ -1,29 +1,74 @@
-var EventEmitter = require('events').EventEmitter
-var archiver = require('archiver')
 var fs = require('fs')
+var once = require('once')
 var debug = require('debug')('media-packager')
 var tagger = require('./lib/tagger')
 var encoder = require('./lib/encoder')
-var archiver = require('archiver')
 var printf = require('format-text')
-var after = require('after')
-
+var spawn = require('child_process').spawn
 var join = require('path').join
+var async = require('async')
+var tmp = require('tmp')
+var mkdirp = require('mkdirp')
+var Readable = require('readable-stream')
+
 function vartest (file) {
   return join(__dirname, 'test', 'fixtures', 'var', 'mp3s', file)
 }
 
-function bundle (items, opts) {
+// NOTE (jb55): The only reason I'm doing this is because archiver is broken
+//              as fuck.
+// TODO (jb55): Replace me with node module
+function zipDir (cwd, dir) {
+  var proc = spawn('zip', ['-r', '-', dir], {
+    cwd: cwd
+  })
+
+  return proc
+}
+
+function bundle (items, opts, done) {
   opts = opts || {}
-  var next = after(items.length, finish)
+  var chunks = []
   var finished = 0
-  var archive = archiver('tar', items.archiveSettings || { store: true })
-  
-  // TODO(jb55): concurrency limits
-  items.forEach(function (item, i) { 
+  var total = items.length
+  var stream = Readable()
+  stream._read = function(n) {}
+
+  // TODO (jb55): make this streaming
+  // NOTE (jb55): for some reason archiver isn't playing nicely with
+  //              our streams, need to figure out why
+  tmp.dir({ unsafeCleanup: true }, function (err, path, cleanup) {
+    if (err) throw err
+
+    var concurrency = opts.concurrency || 6
+    var dirName = items[0].metadata.album || "Test Archive"
+    var dstDir = join(path, dirName)
+    var work = proc.bind(null, dstDir)
+
+    mkdirp(dstDir, function () {
+      async.eachLimit(items, concurrency, work, function (err) {
+        if (err) throw err
+        var clean = once(function(){
+          debug('pushing null')
+          stream.push(null)
+          debug('cleaning')
+          cleanup()
+        })
+
+        debug('dstDir %s', dstDir)
+        zipDir(path, dirName).stdout
+          .on('data', function (chunk, enc) {
+            stream.push(chunk, enc)
+          })
+          .on('end', clean)
+      })
+    })
+
+  })
+
+  function proc (dir, item, next) {
     var format = item.encoding.format || item.format
     var src = typeof item.src === 'string' ? fs.createReadStream(item.src) : item.src
-    src.pause()
     var encoding = encoder(src, item.encoding)
     var output = tagger(encoding, {format: format, metadata: item.metadata })
 
@@ -33,36 +78,14 @@ function bundle (items, opts) {
       format: format
     })
 
-    src.on('error', function (err) {
-      throw err
-    })
-
-    encoding.on('error', function (err) {
-      throw err
-    })
-
-    output.on('error', function (err) {
-      throw err
-    })
-
-    output.on('finish', function () {
-      debug('%d output finish', i)
-      archive.emit('progress', ++finished, items.length)
-      next()
-    })
-
-    output.pipe(fs.createWriteStream(vartest(filename)))
-
-    archive.append(output, { name: filename })
-    src.resume()
-  })
-
-  function finish (err) {
-    debug('archive finalizing', err)
-    archive.finalize()
+    output.pipe(fs.createWriteStream(join(dir, filename)))
+      .on('finish', function () {
+        stream.emit('progress', ++finished, total)
+        next()
+      })
   }
 
-  return archive
+  return stream
 }
 
 
