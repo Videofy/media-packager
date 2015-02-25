@@ -1,7 +1,5 @@
 
 machine:
-  environment:
-    DEBUG: media-packager*
   node:
     version: 0.10.26
 
