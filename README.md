@@ -1,6 +1,8 @@
 
 # media-packager
 
+  [![Build Status](https://travis-ci.org/monstercat/media-packager.svg)](https://travis-ci.org/monstercat/media-packager)
+
   Packages media!
 
 ## API
