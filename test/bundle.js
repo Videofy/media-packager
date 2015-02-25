@@ -18,7 +18,8 @@ function item (fmt, n) {
   return {
     src: src,
     encoding: {
-      format: fmt
+      format: fmt,
+      bitRate: 128
     },
     metadata: {
       artwork: fixture('art.png'),
