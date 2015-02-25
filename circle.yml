@@ -7,4 +7,4 @@ machine:
 
 dependencies:
   pre:
-    - pip install eyeD3 --allow-external eyeD3
+    - easy_install eyeD3
