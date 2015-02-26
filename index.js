@@ -39,7 +39,7 @@ function bundle (items, opts, done) {
     if (err) throw err
 
     var concurrency = opts.concurrency || 6
-    var dirName = items[0].metadata.album || "Test Archive"
+    var dirName = opts.folderName || items[0].metadata.album || "Music"
     var dstDir = join(path, dirName)
     var work = proc.bind(null, dstDir)
 
