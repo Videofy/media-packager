@@ -8,9 +8,17 @@ var rimraf = require('rimraf').sync
 var through = require('through2')
 var count = require('stream-count')
 var EventEmitter = require('events').EventEmitter
+var util = require('util')
 
 function fixture (p) {
   return join(__dirname, 'fixtures', p)
+}
+
+function rouglyEqual(t, actual, expected, bound, msg) {
+  var error = actual - expected
+  var diff = Math.abs(error)
+  var msg = util.format('%s actual %d ~= %d (±%d) within ±%d bound', msg, actual, expected, diff, bound)
+  t.ok(diff <= bound, msg)
 }
 
 function testEncoding (src, settings) {
@@ -33,8 +41,7 @@ function testEncoding (src, settings) {
 
     events.on('count', function (err, len) {
       t.error(err)
-      var msg = settings.bitRate + ' ' + settings.format + ' should be roughly the right size'
-      t.equal(len, settings.expectedSize, msg)
+      rouglyEqual(t, len, settings.expectedSize, 10)
     })
   })
 
