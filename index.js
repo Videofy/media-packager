@@ -16,7 +16,8 @@ function vartest (file) {
 }
 
 // NOTE (jb55): The only reason I'm doing this is because archiver is broken
-// TODO (jb55): replace zip child_process with node module
+//              as fuck.
+// TODO (jb55): Replace me with node module
 function zipDir (cwd, dir) {
   var proc = spawn('zip', ['-r', '-', dir], {
     cwd: cwd
@@ -33,6 +34,7 @@ function bundle (items, opts, done) {
   var stream = Readable()
   stream._read = function(n) {}
 
+  // TODO (jb55): make this streaming
   // NOTE (jb55): for some reason archiver isn't playing nicely with
   //              our streams, need to figure out why
   tmp.dir({ unsafeCleanup: true }, function (err, path, cleanup) {
