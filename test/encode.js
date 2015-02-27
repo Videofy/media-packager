@@ -42,7 +42,7 @@ function testEncoding (src, settings) {
 
     events.on('count', function (err, len) {
       t.error(err)
-      rouglyEqual(t, len, settings.expectedSize, 10)
+      rouglyEqual(t, len, settings.expectedSize, 20)
     })
   })
 
