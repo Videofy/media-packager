@@ -14,10 +14,11 @@ function fixture (p) {
   return join(__dirname, 'fixtures', p)
 }
 
-function rouglyEqual(t, actual, expected, bound, msg) {
+function rouglyEqual(t, actual, expected, bound, userMsg) {
   var error = actual - expected
   var diff = Math.abs(error)
-  var msg = util.format('%s actual %d ~= %d (±%d) within ±%d bound', msg, actual, expected, diff, bound)
+  userMsg = userMsg ? userMsg + ": " : ""
+  var msg = util.format('%sactual %d ~= %d (±%d) within ±%d bound', msg, actual, expected, diff, bound)
   t.ok(diff <= bound, msg)
 }
 
