@@ -59,6 +59,6 @@ test('bundling works', function (t) {
 
   bundler.pipe(fs.createWriteStream(fixture('var/out.zip')))
   count(bundler, function (err, len) {
-    roughly(t, len, 4433407, 100*n, 'zip size matches')
+    roughly(t, len, 4456164, 100*n, 'zip size matches')
   })
 })
