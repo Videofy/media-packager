@@ -6,6 +6,7 @@ var debug = require('debug')('media-packager:test:encoder')
 var bundle = require('../')
 var count = require('stream-count')
 var mkdirp = require('mkdirp')
+var roughly = require('./util/roughly')
 
 function fixture (file) {
   return join(__dirname, 'fixtures', file)
@@ -58,6 +59,6 @@ test('bundling works', function (t) {
 
   bundler.pipe(fs.createWriteStream(fixture('var/out.zip')))
   count(bundler, function (err, len) {
-    t.equal(len, 4433407, 'file size matches')
+    roughly(t, len, 4433407, 100*n, 'zip size matches')
   })
 })
