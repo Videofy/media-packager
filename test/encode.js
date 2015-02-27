@@ -9,6 +9,10 @@ var through = require('through2')
 var count = require('stream-count')
 var EventEmitter = require('events').EventEmitter
 
+function fixture (p) {
+  return join(__dirname, 'fixtures', p)
+}
+
 function testEncoding (src, settings) {
   var stream = encode(src, settings)
   var events = new EventEmitter()
@@ -16,6 +20,9 @@ function testEncoding (src, settings) {
   count(stream, function (err, len) {
     events.emit('count', err, len)
   })
+
+  if (settings.out)
+    stream.pipe(fs.createWriteStream(fixture('var/' + settings.out)))
 
   test(settings.format + ' encoding works', function (t) {
     t.plan(2)
@@ -46,6 +53,7 @@ if (!module.parent) {
   testEncoding(fs.createReadStream(src), {
     format: 'mp3',
     bitRate: 320,
+    out: "320.mp3",
     expectedSize: 508910
   })
 }

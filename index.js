@@ -16,7 +16,6 @@ function vartest (file) {
 }
 
 // NOTE (jb55): The only reason I'm doing this is because archiver is broken
-//              as fuck.
 // TODO (jb55): Replace me with node module
 function zipDir (cwd, dir) {
   var proc = spawn('zip', ['-r', '-', dir], {
