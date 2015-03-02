@@ -89,3 +89,5 @@ function bundle (items, opts, done) {
 
 
 module.exports = bundle
+module.exports.tagger = tagger
+module.exports.encoder = encoder

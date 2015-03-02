@@ -59,7 +59,7 @@ function testTagging (src, settings) {
       t.deepEqual(meta.artist, [metadata.artist], 'artist should match')
       t.equal(meta.title, metadata.title, 'title should match')
       t.equal(meta.track.no, metadata.track, 'track number should match')
-      t.deepEqual(meta.genre, ['Electronic/Electronic'], 'genre should match')
+      t.deepEqual([meta.genre[0].split('/')[0]], ['Electronic'], 'genre should match')
       t.equal(picture && picture.format, 'png', 'picture should be the right format')
     })
   })
@@ -69,10 +69,11 @@ function testTagging (src, settings) {
 
 var src = path.join(__dirname, 'fixtures/hellberg.mp3')
 
-testTagging(fs.createReadStream(src), {
-  format: 'mp3',
-  metadata: metadata
-})
-
+if (!module.parent) {
+  testTagging(fs.createReadStream(src), {
+    format: 'mp3',
+    metadata: metadata
+  })
+}
 
 module.exports = testTagging
