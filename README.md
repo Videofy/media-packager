@@ -1,9 +1,22 @@
 
 # media-packager
 
-  [![Build Status](https://travis-ci.org/monstercat/media-packager.svg)](https://travis-ci.org/monstercat/media-packager)
+[![Build Status](https://travis-ci.org/monstercat/media-packager.svg)](https://travis-ci.org/monstercat/media-packager)
 
-  Packages media!
+Packages media!
+
+**WARNING**: Not yet meant for general consumption
+
+## Horrible dependencies
+
+* a modern version ffmpeg
+
+* a modern version of eyeD3
+
+* metaflac
+
+The goal is to eventually to remove all of these dependencies and replace them
+with sane native libs. With the exception of ffmpeg of course.
 
 ## Example
 
