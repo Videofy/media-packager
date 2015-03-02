@@ -5,9 +5,39 @@
 
   Packages media!
 
-## API
+## Example
 
-  TBD
+```js
+var media = require('media-packager')
+
+var input = fs.createReadStream('in.wav')
+
+// encode
+var encoding = media.encoder(input, {
+  format: 'mp3',
+  quality: 0, // V0
+});
+
+// tag
+var tagged = media.tagger(encoding, {
+  format: 'mp3',
+  metadata: {
+    title: 'my title',
+    genre: 'Electronic',
+    artist: 'My Artist',
+    album: 'My Album',
+    comment: 'Comments',
+    track: 10,
+    bpm: 128
+  }
+});
+
+tagged
+.pipe(fs.createWriteStream('out.mp3'))
+
+// packaging
+// TODO docs
+```
 
 ## License
 
