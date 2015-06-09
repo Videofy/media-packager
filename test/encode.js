@@ -60,7 +60,7 @@ if (!module.parent) {
   })
 
   test('flac should have nonzero length', function (t) {
-    t.plan(1)
+    t.plan(2)
     var stream = encode(src, {
       format: 'flac',
       out: "non-zero-len.flac"
@@ -68,8 +68,12 @@ if (!module.parent) {
 
     var parser = stream.pipe(new FLAC())
     parser.on('data', function (tag) {
-      if (tag.type === 'duration') {
+      switch (tag.type) {
+      case 'duration':
         t.not(tag.value, 0, 'duration should be greater than zero')
+        break;
+      case 'samplesInStream':
+        t.not(tag.value, 0, 'samplesInStream shouldnt be zero')
       }
     })
   })
