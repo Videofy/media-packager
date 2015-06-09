@@ -1,6 +1,7 @@
 var test = require('tape')
 var join = require('path').join
 var fs = require('fs')
+var FLAC = require('flac-parser')
 var encode = require('../lib/encoder')
 var clone = require('clone')
 var debug = require('debug')('media-packager:test:encoder')
@@ -56,6 +57,21 @@ if (!module.parent) {
     bitRate: 320,
     out: "320.mp3",
     expectedSize: 508910
+  })
+
+  test('flac should have nonzero length', function (t) {
+    t.plan(1)
+    var stream = encode(src, {
+      format: 'flac',
+      out: "non-zero-len.flac"
+    })
+
+    var parser = stream.pipe(new FLAC())
+    parser.on('data', function (tag) {
+      if (tag.type === 'duration') {
+        t.not(tag.value, 0, 'duration should be greater than zero')
+      }
+    })
   })
 }
 
