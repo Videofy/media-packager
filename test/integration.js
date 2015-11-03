@@ -31,5 +31,5 @@ var src = join(__dirname, 'fixtures/hellberg.wav')
 testFormat(fs.createReadStream(src), {
   format: 'flac',
   out: 'hellberg_out_integration.flac',
-  expectedSize: 1248304
+  expectedSize: 1244422
 })

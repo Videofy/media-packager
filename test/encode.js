@@ -49,7 +49,7 @@ var dst = join(__dirname, 'fixtures/var/hellberg_out.flac')
 if (!module.parent) {
   testEncoding(fs.createReadStream(src), {
     format: 'flac',
-    expectedSize: 1248305
+    expectedSize: 1244422
   })
 
   testEncoding(fs.createReadStream(src), {
