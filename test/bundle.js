@@ -29,7 +29,8 @@ function item (fmt, n) {
       track: n,
       album: 'Hellberg EP',
       genre: 'Electronic',
-      comment: 'This is my jam'
+      comment: 'This is my jam',
+      isrc: 'CA6D21500404'
     }
   }
 }

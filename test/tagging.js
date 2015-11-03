@@ -15,7 +15,8 @@ var metadata = {
   track: 10,
   album: 'Hellberg EP',
   genre: 'Electronic',
-  comment: 'This is my jam'
+  comment: 'This is my jam',
+  isrc: 'CA6D21500404'
 }
 
 function testTagging (src, settings) {
@@ -24,7 +25,7 @@ function testTagging (src, settings) {
   var stream = tagger(src, settings)
 
   test(fmt + ' tagging works', function (t) {
-    t.plan(9)
+    t.plan(10)
 
     var out = fs.createWriteStream(path.join(__dirname, 'fixtures/var/hellberg_out.' + fmt))
     stream.pipe(out)
@@ -47,6 +48,13 @@ function testTagging (src, settings) {
     parser.on('genre', function (genre) {
       debug('genre %j', genre)
     })
+
+    function onISRC (result) {
+      debug('ISRC', result)
+      t.equal(result, metadata.isrc, 'ISRC should match')
+    }
+    parser.on('TSRC', onISRC)
+    parser.on('ISRC', onISRC)
 
     parser.on('metadata', function (meta){
       var pictures = meta.picture
