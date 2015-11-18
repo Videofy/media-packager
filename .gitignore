@@ -2,3 +2,4 @@ contrib
 node_modules
 test/fixtures/var
 .DS_Store
+*.log

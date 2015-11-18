@@ -2,7 +2,7 @@
   "name": "media-packager",
   "description": "Monstercat media packager",
   "keywords": [],
-  "version": "0.0.4",
+  "version": "0.0.5",
   "repository": {
     "type": "git",
     "url": "git://github.com/monstercat/media-packager.git"
