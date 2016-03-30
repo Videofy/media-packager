@@ -2,7 +2,7 @@
   "name": "media-packager",
   "description": "Monstercat media packager",
   "keywords": [],
-  "version": "0.0.5",
+  "version": "0.0.6",
   "repository": {
     "type": "git",
     "url": "git://github.com/monstercat/media-packager.git"
@@ -18,7 +18,6 @@
     "concat-map": "0.0.1",
     "debug": "^2.1.1",
     "dezalgo": "^1.0.1",
-    "format-text": "0.0.3",
     "mkdirp": "^0.5.0",
     "once": "^1.3.1",
     "readable-stream": "^1.0.33",

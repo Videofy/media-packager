@@ -3,7 +3,6 @@ var once = require('once')
 var debug = require('debug')('media-packager')
 var tagger = require('./lib/tagger')
 var encoder = require('./lib/encoder')
-var printf = require('format-text')
 var spawn = require('child_process').spawn
 var join = require('path').join
 var async = require('async')
@@ -70,13 +69,7 @@ function bundle (items, opts, done) {
     var src = typeof item.src === 'string' ? fs.createReadStream(item.src) : item.src
     var encoding = encoder(src, item.encoding)
     var output = tagger(encoding, {format: format, metadata: item.metadata })
-
-    var filename = item.filename || printf('{artist} - {title}.{format}', {
-      artist: item.metadata.artist,
-      title: item.metadata.title,
-      format: format
-    })
-
+    var filename = item.filename || item.metadata.artist + ' - ' + item.metadata.title + '.' + format
     output.pipe(fs.createWriteStream(join(dir, filename)))
       .on('finish', function () {
         stream.emit('progress', ++finished, total)
